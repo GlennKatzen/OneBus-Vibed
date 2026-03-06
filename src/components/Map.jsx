@@ -1,6 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { getBusStopIcon, getPOIIcon } from '../utils/icons';
+// Import the new service and component
+import { 
+  extractUniqueCategories, 
+  filterPoisByCategories, 
+  getDefaultCategories,
+  getCategoryCounts 
+} from '../services/poiCategories';
+import POICategoryFilter from './POICategoryFilter';
 
 const AUSTIN_CENTER = { lat: 30.2672, lng: -97.7431 };
 const DEFAULT_ZOOM = 13;
@@ -15,6 +23,26 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
   // State for context menu
   const [contextMenu, setContextMenu] = useState(null);
 
+  // New state for POI filtering
+  const [selectedCategories, setSelectedCategories] = useState(new Set());
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const [categoryCounts, setCategoryCounts] = useState({});
+
+  // Extract categories and set defaults when POIs change
+  useEffect(() => {
+    if (pois.length > 0) {
+      const categories = extractUniqueCategories(pois);
+      setAvailableCategories(categories);
+      setSelectedCategories(getDefaultCategories(categories));
+      setCategoryCounts(getCategoryCounts(pois));
+    }
+  }, [pois]);
+
+  // Filter POIs based on selected categories
+  const filteredPois = useMemo(() => {
+    return filterPoisByCategories(pois, selectedCategories);
+  }, [pois, selectedCategories]);
+
   const mapContainerStyle = {
     width: '100%',
     height: '100%',
@@ -27,6 +55,27 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
     mapTypeControl: false,
     fullscreenControl: true,
   }), []);
+
+  // Category filter handlers
+  const handleToggleCategory = (category) => {
+    setSelectedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  };
+
+  const handleClearAll = () => {
+    setSelectedCategories(new Set());
+  };
+
+  const handleSelectAll = () => {
+    setSelectedCategories(new Set(availableCategories));
+  };
 
   // Handle marker click
   const handleMarkerClick = (markerId) => {
@@ -96,6 +145,18 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
         onRightClick={handleMapRightClick}
         onClick={handleMapClick}
       >
+        {/* Add the category filter component */}
+        {availableCategories.length > 0 && (
+          <POICategoryFilter
+            categories={availableCategories}
+            selectedCategories={selectedCategories}
+            onToggleCategory={handleToggleCategory}
+            onClearAll={handleClearAll}
+            onSelectAll={handleSelectAll}
+            categoryCounts={categoryCounts}
+          />
+        )}
+
         {/* Render bus stop markers */}
         {stops.map((stop, index) => {
           // Handle different possible field names for coordinates
@@ -139,8 +200,8 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
           );
         })}
 
-        {/* Render POI markers */}
-        {pois.map((poi, index) => {
+        {/* Render filtered POI markers - now using filteredPois instead of pois */}
+        {filteredPois.map((poi, index) => {
           // Handle different possible field names for coordinates
           const lat = poi.latitude || poi.lat || poi.location?.lat;
           const lng = poi.longitude || poi.lng || poi.location?.lng;

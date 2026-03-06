@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://onebus.us-east-2.elasticbeanstalk.com/api/';
+const API_BASE_URL = 'https://onebus-oa.onrender.com/api/';
 
 /**
  * Fetches bus stops and POIs from the OneBus API
