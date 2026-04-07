@@ -1,5 +1,5 @@
 import React from 'react';
-import './POICategoryFilter.css'; // We'll create this next
+import '../styles/POICategoryFilter.css';
 
 const POICategoryFilter = ({ 
   categories, 

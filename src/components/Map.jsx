@@ -1,6 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import BottomSheet from '../components/BottomSheet';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { getBusStopIcon, getPOIIcon } from '../utils/icons';
+
 // Import the new service and component
 import { 
   extractUniqueCategories, 
