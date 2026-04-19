@@ -71,11 +71,6 @@ export function getPOIIcon(amenity) {
     };
   }
 
-/**
- * Get icon for user's current location
- * @returns {Object} Icon configuration object
- */
-
   // Normalize category: lowercase, trim, replace spaces/underscores with single space
   const category = amenity
     .toLowerCase()
@@ -83,39 +78,30 @@ export function getPOIIcon(amenity) {
     .replace(/[_\s]+/g, ' ');
 
   // Map categories to appropriate icons
-  // Handles variations like "Food Services", "food services", "food_services", etc.
   const iconMap = {
-    // Food-related categories
     'restaurant': restaurantIcon,
     'cafe': cafeIcon,
     'bar': barIcon,
     'pub': pubIcon,
     'marketplace': groceryIcon,
-
-    // Entertainment & Culture
     'theatre': theatreIcon,
     'cinema': cinemaIcon,
-    'music venue': musicCenterIcon, // not showing up
-    'events venue': eventCenterIcon, // not showing up
-
-    // Community & Services
+    'music venue': musicCenterIcon,
+    'events venue': eventCenterIcon,
     'library': libraryIcon,
-    'place of worship': churchIcon, // not showing up
-    'social centre': socialCenterIcon, // not showing up
-
-    // Transportation & Location
+    'place of worship': churchIcon,
+    'social centre': socialCenterIcon,
     'bus': busIcon,
-
     'my location': mylocationIcon,
     'location': mylocationIcon,
   };
 
-  // Return mapped icon or default POI icon
   return iconMap[category] || {
     url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
     scaledSize: { width: iconWidth, height: iconHeight },
   };
-}
+} // <-- Added this
+
 export function getUserLocationIcon() {
   return {
     url: mylocationIcon,
