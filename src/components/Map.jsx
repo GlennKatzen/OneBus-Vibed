@@ -56,6 +56,7 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
     streetViewControl: false,
     mapTypeControl: false,
     fullscreenControl: true,
+    gestureHandling: 'greedy', // Allows one-finger scrolling
   }), []);
 
   // Category filter handlers
@@ -104,7 +105,19 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
       }
     });
   };
-
+  // Handle long-press on mobile
+  const handleMarkerLongPress = (event) => {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    
+    setContextMenu({
+      position: { lat, lng },
+      pixelPosition: {
+        x: event.domEvent.clientX,
+        y: event.domEvent.clientY
+      }
+    });
+  };
   // Handle "Update my location to here" click
   const handleUpdateLocation = () => {
     if (contextMenu && onLocationUpdate) {
@@ -158,7 +171,7 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
             categoryCounts={categoryCounts}
           />
         )}
-
+        
         {/* Render user's current location marker */}
         {center && (
           <Marker
@@ -167,6 +180,7 @@ const Map = ({ stops = [], pois = [], center = AUSTIN_CENTER, zoom = DEFAULT_ZOO
             title="Your Location"
           />
         )}
+
 
         {/* Render bus stop markers */}
         {stops.map((stop, index) => {
