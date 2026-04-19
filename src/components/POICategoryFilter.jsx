@@ -54,6 +54,19 @@ const POICategoryFilter = ({
           )}
         </div>
       )}
+
+      {/* Feedback section */}
+        <div className="feedback-section">
+          <span>We'd love your feedback! </span>
+          <a 
+            href="https://forms.gle/d7ohy5Aktd9HHmtP7"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="feedback-link"
+          >
+            Tell us what you think
+          </a>
+        </div>
     </div>
   );
 };

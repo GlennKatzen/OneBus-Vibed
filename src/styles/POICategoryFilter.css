@@ -174,3 +174,23 @@
   background: #e8f0fe;
   border-color: #4285f4;
 }
+
+.feedback-section {
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #000000;
+  text-align: center;
+  border-top: 0.5px solid #e0e0e0;
+  margin-top: 4px;
+}
+
+.feedback-link {
+  color: #4285f4;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.feedback-link:hover {
+  text-decoration: underline;
+}

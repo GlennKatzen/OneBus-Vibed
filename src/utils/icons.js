@@ -100,7 +100,7 @@ export function getPOIIcon(amenity) {
     url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
     scaledSize: { width: iconWidth, height: iconHeight },
   };
-} // <-- Added this
+}
 
 export function getUserLocationIcon() {
   return {
